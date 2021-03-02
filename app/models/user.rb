@@ -1,0 +1,15 @@
+class User < ApplicationRecord
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+  before_save {self.email = self.email.downcase}
+
+  has_secure_password
+
+  validates :name, presence: true
+  validates :email,
+            presence: true,
+            format: { with: VALID_EMAIL_REGEX },
+            uniqueness: true
+  validates :password_digest, presence: true
+  
+  has_many :favorites, dependent: :destroy
+end
