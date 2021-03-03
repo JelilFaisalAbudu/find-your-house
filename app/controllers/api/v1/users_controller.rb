@@ -4,7 +4,7 @@ class Api::V1::UsersController < ApplicationController
   def show
     json_response(@user)
   end
-  
+
   def create
     @user = User.create!(user_params)
     if @user.save
@@ -13,7 +13,7 @@ class Api::V1::UsersController < ApplicationController
       render json: @user.errors, status: :unprocessable_entity
     end
   end
-  
+
   private
 
   def user_params
