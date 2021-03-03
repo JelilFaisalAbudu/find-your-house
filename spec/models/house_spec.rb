@@ -1,5 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe House, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  # Validation test
+  # Before save, ensure these fields are present
+  it { should(validate_presence_of(:name)) }
+  it { should(validate_presence_of(:type)) }
+  it { should(validate_presence_of(:description)) }
+
+  # Association test
+  # Ensure the House model has 1:m relationship with the Favorite model
+  # it { should(have_many(:favorites).dependent(:destroy)) }
 end
