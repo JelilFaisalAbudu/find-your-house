@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :house do
-    name { "MyString" }
-    type { "" }
-    description { "MyString" }
+    name { Faker::Restaurant.name }
+    type { Faker::Restaurant.type }
+    description { Faker::Restaurant.description }
   end
 end
