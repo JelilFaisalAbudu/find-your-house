@@ -5,7 +5,7 @@ class House < ApplicationRecord
             uniqueness: { case_sensitive: false },
             length: {maximum: 20}
 
-  validates :type,
+  validates :category,
             presence: true,
             uniqueness: { case_sensitive: false },
             length: {maximum: 20}

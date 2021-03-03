@@ -4,7 +4,7 @@ RSpec.describe House, type: :model do
   # Validation test
   # Before save, ensure these fields are present
   it { should(validate_presence_of(:name)) }
-  it { should(validate_presence_of(:type)) }
+  it { should(validate_presence_of(:category)) }
   it { should(validate_presence_of(:description)) }
 
   # Association test
