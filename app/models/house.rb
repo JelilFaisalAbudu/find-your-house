@@ -12,6 +12,5 @@ class House < ApplicationRecord
   
   validates :description,
             presence: true,
-            uniqueness: { case_sensitive: false },
-            length: {maximum: 100} 
+            uniqueness: { case_sensitive: false } 
 end
