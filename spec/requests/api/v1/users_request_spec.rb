@@ -4,8 +4,38 @@ RSpec.describe "Api::V1::Users", type: :request do
   # Initialize the test data from the factory
   let(:users) { create_list(:user, 20) }
   let(:fifth_user) { users.fifth }
+  let(:user_id) { users.fifth.id }
 
+  # Test suite for GET /todos/:id
+  describe "GET /api/v1/users/:id" do
+    
+    before { get "/api/v1/users/#{user_id}" }
 
+    context 'when the user record exists' do
+      it 'returns the user' do
+        expect(json).not_to(be_empty)
+        expect(json['id']).to(eq(user_id))
+      end
+
+      it 'returns status code 200' do
+        expect(response).to(have_http_status(200))  
+      end
+    end
+
+    context 'when a user record does not exist' do
+      let(:user_id) { 10001098 }
+
+      it "returns status code 404" do
+        expect(response).to(have_http_status(404))
+      end
+      
+      it "returns a not found message" do
+        p "Line 72 Log #{json['message']}"
+        expect(json['message']).to(match(/Couldn't find User with 'id'=10001098/i))  
+      end
+    end
+  end
+  
   # Test suite for POST /users
   describe 'POST api/v1/users' do
 
@@ -40,7 +70,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       end
       
       it 'returns a validation failure message' do
-        expect(json['email']).to(include('is invalid'))  
+        expect(json['message']).to(include('can\'t be blank'))  
       end
     end
 
@@ -61,7 +91,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       end
       
       it 'returns an email validation failure message' do
-        expect(json['email']).to(include('has already been taken'))  
+        expect(json['message']).to(include('Email has already been taken'))  
       end
     end
   end
