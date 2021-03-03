@@ -29,7 +29,6 @@ RSpec.describe 'Api::V1::Users', type: :request do
       end
 
       it 'returns a not found message' do
-        p "Line 72 Log #{json['message']}"
         expect(json['message']).to(match(/Couldn't find User with 'id'=10001098/i))
       end
     end
