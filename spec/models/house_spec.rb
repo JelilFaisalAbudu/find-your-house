@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe User, type: :model do
+RSpec.describe House, type: :model do
   # Validation test
   # Before save, ensure these fields are present
   it { should(validate_presence_of(:name)) }
-  it { should(validate_presence_of(:email)) }
-  it { should(validate_presence_of(:password_digest)) }
+  it { should(validate_presence_of(:category)) }
+  it { should(validate_presence_of(:description)) }
 
   # Association test
-  # Ensure Todo model has 1:m relationship with the Favorite model
+  # Ensure the House model has 1:m relationship with the Favorite model
   # it { should(have_many(:favorites).dependent(:destroy)) }
 end
