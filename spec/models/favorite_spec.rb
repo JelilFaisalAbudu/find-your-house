@@ -7,4 +7,5 @@ RSpec.describe Favorite, type: :model do
 
   # Association test
   it { should(belong_to(:house)) }
+  it { should(belong_to(:user)) }
 end
