@@ -37,7 +37,6 @@ RSpec.describe 'Api::V1::Houses', type: :request do
       end
 
       it 'does not create a new house into the database' do
-        p "Logging Status: #{json['message']}"
         expect(response.status).to(eq(422))
         expect(json['message']).to(match(/Validation failed: Category can't be blank/i))
       end
