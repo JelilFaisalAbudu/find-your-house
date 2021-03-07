@@ -16,12 +16,23 @@ RSpec.describe "Api::V1::Favorites", type: :request do
       it 'returns the user' do
         expect(response).to(have_http_status(200))
       end
-    end
 
-    it 'returns the user\'s favorites' do
-      # Note `json` is a custom helper to parse JSON responses
-      # expect(json).not_to be_empty
-      # expect(json.size).to eq(15)
+      # it 'returns the user\'s favorites' do
+      #   p "Logging Response: #{json}"
+      #   expect(json).not_to be_empty
+        
+      # end
+    end
+    context 'when user does not exist' do
+      let(:user_id) { 111110 }
+
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
+      end
+
+      it 'returns a not found message' do
+        expect(response.body).to match(/Couldn't find User/)
+      end
     end
   end
 end
