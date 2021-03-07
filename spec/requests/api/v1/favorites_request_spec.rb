@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe "Api::V1::Favorites", type: :request do
   let(:user) { create(:user) }
   let(:user_id) { user.id }
-  let(:houses) { create(:house) }
-  let(:house_id) { house.id } 
+  let(:houses) { create_list(:house, 10) }
+  let(:house_id) { house.first.id } 
   let(:favorites) { create(:favorite, user_id: user_id, house_id: house_id) }
   
 
@@ -32,6 +32,33 @@ RSpec.describe "Api::V1::Favorites", type: :request do
 
       it 'returns a not found message' do
         expect(response.body).to match(/Couldn't find User/)
+      end
+    end
+  end
+
+  # Test suite for PUT "api/v1/users/:user_id/favorites"
+  describe 'POST api/v1/users/:user_id/favorites' do
+    let(:valid_attributes) { { house_id: houses.second.id } }
+
+    context 'when request attributes are valid' do
+      before do
+        post "/api/v1/users/#{user_id}/favorites",
+        params: valid_attributes
+      end
+      it 'returns status code 201' do
+        expect(response).to have_http_status(201)
+      end
+    end
+
+    context 'when an invalid request is made' do
+      before { post "/api/v1/users/#{user_id}/favorites", params: {} }
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns a failure message' do
+        expect(response.body).to match(/Validation failed: House must exist, House can't be blank/)
       end
     end
   end
