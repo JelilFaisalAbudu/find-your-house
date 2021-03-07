@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Houses', type: :request do
-    # initialize test data
-    let!(:houses) { create_list(:house, 10) }
-    let(:house_id) { houses.first.id }
+  # initialize test data
+  let!(:houses) { create_list(:house, 10) }
+  let(:house_id) { houses.first.id }
 
   describe 'GET /api/v1/houses' do
     before { get '/api/v1/houses' }

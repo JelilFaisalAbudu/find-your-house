@@ -1,13 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe "Api::V1::Favorites", type: :request do
+RSpec.describe 'Api::V1::Favorites', type: :request do
   let(:user) { create(:user) }
   let(:user_id) { user.id }
   let(:houses) { create_list(:house, 10) }
-  let(:house_id) { house.first.id } 
+  let(:house_id) { house.first.id }
   let(:favorites) { create(:favorite, user_id: user_id, house_id: house_id) }
-  
-
 
   describe 'GET /api/v1/users/:id/favorites' do
     before { get "/api/v1/users/#{user_id}/favorites" }
@@ -20,11 +18,11 @@ RSpec.describe "Api::V1::Favorites", type: :request do
       # it 'returns the user\'s favorites' do
       #   p "Logging Response: #{json}"
       #   expect(json).not_to be_empty
-        
+
       # end
     end
     context 'when user does not exist' do
-      let(:user_id) { 111110 }
+      let(:user_id) { 111_110 }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
@@ -43,7 +41,7 @@ RSpec.describe "Api::V1::Favorites", type: :request do
     context 'when request attributes are valid' do
       before do
         post "/api/v1/users/#{user_id}/favorites",
-        params: valid_attributes
+             params: valid_attributes
       end
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
