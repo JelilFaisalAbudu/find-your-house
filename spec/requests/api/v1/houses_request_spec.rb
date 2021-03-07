@@ -1,10 +1,21 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Houses', type: :request do
+  # initialize test data
+  let!(:houses) { create_list(:house, 10) }
+  let(:house_id) { houses.first.id }
+
   describe 'GET /api/v1/houses' do
     before { get '/api/v1/houses' }
     it 'returns all houses' do
+      # p "logging json #{json}"
       expect(response).to(have_http_status(200))
+    end
+
+    it 'returns the total houses' do
+      # Note `json` is a custom helper to parse JSON responses
+      expect(json).not_to be_empty
+      expect(json.size).to eq(10)
     end
   end
   describe 'POST /api/v1/houses' do
@@ -37,7 +48,6 @@ RSpec.describe 'Api::V1::Houses', type: :request do
       end
 
       it 'does not create a new house into the database' do
-        p "Logging Status: #{json['message']}"
         expect(response.status).to(eq(422))
         expect(json['message']).to(match(/Validation failed: Category can't be blank/i))
       end

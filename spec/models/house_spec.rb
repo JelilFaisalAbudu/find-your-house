@@ -9,5 +9,5 @@ RSpec.describe House, type: :model do
 
   # Association test
   # Ensure the House model has 1:m relationship with the Favorite model
-  # it { should(have_many(:favorites).dependent(:destroy)) }
+  it { should(have_many(:favorites).dependent(:destroy)) }
 end
