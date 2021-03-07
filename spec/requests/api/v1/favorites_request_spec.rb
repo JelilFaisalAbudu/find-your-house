@@ -1,10 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe "Api::V1::Favorites", type: :request do
-  let(:houses) { create_list(:house, 45) }
-  let(:users) { create_list(:user, 23) }
-  let(:favorites) { create_list(:favorite, 15) }
-  let(:user_id) { users.first.id } 
+  let(:user) { create(:user) }
+  let(:user_id) { user.id }
+  let(:houses) { create(:house) }
+  let(:house_id) { house.id } 
+  let(:favorites) { create(:favorite, user_id: user_id, house_id: house_id) }
+  
+
 
   describe 'GET /api/v1/users/:id/favorites' do
     before { get "/api/v1/users/#{user_id}/favorites" }
@@ -13,6 +16,12 @@ RSpec.describe "Api::V1::Favorites", type: :request do
       it 'returns the user' do
         expect(response).to(have_http_status(200))
       end
+    end
+
+    it 'returns the user\'s favorites' do
+      # Note `json` is a custom helper to parse JSON responses
+      # expect(json).not_to be_empty
+      # expect(json.size).to eq(15)
     end
   end
 end
