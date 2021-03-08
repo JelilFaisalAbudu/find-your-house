@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       end
       
       resources :houses, only: [:index, :create]
+      resources :tokens, only: [:create]
     end
   end
 end
