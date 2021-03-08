@@ -1,11 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Favorites', type: :request do
-  let(:user) { create(:user) }
+  let(:users) { create_list(:user, 24) }
+  let(:user) { users.second }
   let(:user_id) { user.id }
   let(:houses) { create_list(:house, 10) }
-  let(:house_id) { house.first.id }
-  let(:favorites) { create(:favorite, user_id: user_id, house_id: house_id) }
+  let(:house_id) { houses.first.id }
+  let(:favorites) { create_list(:favorite, 5, user_id: user_id, house_id: house_id) }
+  let(:favorite_id) { favorites.last.id }
 
   describe 'GET /api/v1/users/:id/favorites' do
     before { get "/api/v1/users/#{user_id}/favorites" }
@@ -14,12 +16,6 @@ RSpec.describe 'Api::V1::Favorites', type: :request do
       it 'returns the user' do
         expect(response).to(have_http_status(200))
       end
-
-      # it 'returns the user\'s favorites' do
-      #   p "Logging Response: #{json}"
-      #   expect(json).not_to be_empty
-
-      # end
     end
     context 'when user does not exist' do
       let(:user_id) { 111_110 }
@@ -41,7 +37,10 @@ RSpec.describe 'Api::V1::Favorites', type: :request do
     context 'when request attributes are valid' do
       before do
         post "/api/v1/users/#{user_id}/favorites",
-             params: valid_attributes
+             params: valid_attributes,
+             headers: {
+               Authorization: JsonWebToken.encode(user_id: user_id)
+             }
       end
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
@@ -49,14 +48,37 @@ RSpec.describe 'Api::V1::Favorites', type: :request do
     end
 
     context 'when an invalid request is made' do
-      before { post "/api/v1/users/#{user_id}/favorites", params: {} }
+      before { post "/api/v1/users/#{user_id}/favorites", params: valid_attributes }
 
       it 'returns status code 422' do
-        expect(response).to have_http_status(422)
+        expect(response).to have_http_status(403)
       end
+    end
+  end
 
-      it 'returns a failure message' do
-        expect(response.body).to match(/Validation failed: House must exist, House can't be blank/)
+  # Test suite for DELETE /api/v1/users/:user_id/favorites/:id
+  describe 'DELETE /api/v1/users/:user_id/favorites/:id' do
+    context 'With proper user authorization' do
+      before do
+        delete "/api/v1/users/#{user_id}/favorites/#{favorite_id}",
+               headers: {
+                 Authorization: JsonWebToken.encode(user_id: user_id)
+               }
+      end
+      it 'removes favorite item from the list' do
+        expect(response).to(have_http_status(204))
+      end
+    end
+
+    context 'With improper user authorization' do
+      before do
+        delete "/api/v1/users/#{user_id}/favorites/#{favorite_id}",
+               headers: {
+                 Authorization: JsonWebToken.encode(user_id: users.last.id)
+               }
+      end
+      it 'removes favorite item from the list' do
+        expect(response).to(have_http_status(403))
       end
     end
   end
