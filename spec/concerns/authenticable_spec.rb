@@ -11,7 +11,6 @@ class MockController
 end
 
 RSpec.describe Authenticable, type: :module do
-  
   let(:user) { create(:user) }
   let(:email) { user.email }
   let(:password) { user.password }
