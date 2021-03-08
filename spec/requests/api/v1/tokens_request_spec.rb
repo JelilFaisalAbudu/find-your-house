@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::Tokens', type: :request do
   let(:user) { create(:user) }
-  let(:email) { user.email}
-  let(:password) {user.password}
+  let(:email) { user.email }
+  let(:password) { user.password }
 
   describe 'POST /api/v1/tokens' do
     before { post '/api/v1/tokens', params: { user: { email: email, password: password } } }
