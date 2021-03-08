@@ -37,10 +37,10 @@ RSpec.describe 'Api::V1::Favorites', type: :request do
     context 'when request attributes are valid' do
       before do
         post "/api/v1/users/#{user_id}/favorites",
-        params: valid_attributes,
-        headers: {
-          Authorization: JsonWebToken.encode(user_id: user_id)
-        }
+             params: valid_attributes,
+             headers: {
+               Authorization: JsonWebToken.encode(user_id: user_id)
+             }
       end
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
@@ -59,28 +59,27 @@ RSpec.describe 'Api::V1::Favorites', type: :request do
   # Test suite for DELETE /api/v1/users/:user_id/favorites/:id
   describe 'DELETE /api/v1/users/:user_id/favorites/:id' do
     context 'With proper user authorization' do
-      before do 
+      before do
         delete "/api/v1/users/#{user_id}/favorites/#{favorite_id}",
-        headers: {
-          Authorization: JsonWebToken.encode(user_id: user_id)
-        }
+               headers: {
+                 Authorization: JsonWebToken.encode(user_id: user_id)
+               }
       end
       it 'removes favorite item from the list' do
-        expect(response).to(have_http_status(204))  
+        expect(response).to(have_http_status(204))
       end
     end
-    
+
     context 'With improper user authorization' do
-      before do 
+      before do
         delete "/api/v1/users/#{user_id}/favorites/#{favorite_id}",
-        headers: {
-          Authorization: JsonWebToken.encode(user_id: users.last.id)
-        }
+               headers: {
+                 Authorization: JsonWebToken.encode(user_id: users.last.id)
+               }
       end
       it 'removes favorite item from the list' do
-        expect(response).to(have_http_status(403))  
+        expect(response).to(have_http_status(403))
       end
     end
   end
-  
 end

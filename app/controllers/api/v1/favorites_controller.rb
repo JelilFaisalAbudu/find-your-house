@@ -14,15 +14,15 @@ class Api::V1::FavoritesController < ApplicationController
     if @favorite.save
       json_response(@favorite, :created)
     else
-      
-      json_response({errors: @favorites.errors}, :unprocessable_entity)
+
+      json_response({ errors: @favorites.errors }, :unprocessable_entity)
     end
   end
 
   def destroy
     @favorite.destroy
     head :no_content
-    end
+  end
 
   private
 
