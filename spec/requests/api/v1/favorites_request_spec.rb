@@ -1,11 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Favorites', type: :request do
-  let(:user) { create(:user) }
+  let(:users) { create_list(:user, 24) }
+  let(:user) { users.second }
   let(:user_id) { user.id }
   let(:houses) { create_list(:house, 10) }
-  let(:house_id) { house.first.id }
-  let(:favorites) { create(:favorite, user_id: user_id, house_id: house_id) }
+  let(:house_id) { houses.first.id }
+  let(:favorites) { create_list(:favorite, 5, user_id: user_id, house_id: house_id) }
+  let(:favorite_id) { favorites.last.id }
 
   describe 'GET /api/v1/users/:id/favorites' do
     before { get "/api/v1/users/#{user_id}/favorites" }
@@ -53,4 +55,32 @@ RSpec.describe 'Api::V1::Favorites', type: :request do
       end
     end
   end
+
+  # Test suite for DELETE /api/v1/users/:user_id/favorites/:id
+  describe 'DELETE /api/v1/users/:user_id/favorites/:id' do
+    context 'With proper user authorization' do
+      before do 
+        delete "/api/v1/users/#{user_id}/favorites/#{favorite_id}",
+        headers: {
+          Authorization: JsonWebToken.encode(user_id: user_id)
+        }
+      end
+      it 'removes favorite item from the list' do
+        expect(response).to(have_http_status(204))  
+      end
+    end
+    
+    context 'With improper user authorization' do
+      before do 
+        delete "/api/v1/users/#{user_id}/favorites/#{favorite_id}",
+        headers: {
+          Authorization: JsonWebToken.encode(user_id: users.last.id)
+        }
+      end
+      it 'removes favorite item from the list' do
+        expect(response).to(have_http_status(403))  
+      end
+    end
+  end
+  
 end
