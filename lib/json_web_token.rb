@@ -1,4 +1,5 @@
 class JsonWebToken
+
   SECRET_KEY = Rails.application.credentials.secret_key_base.to_s
 
   def self.encode(payload, exp = 24.hours.from_now)
@@ -15,6 +16,5 @@ class JsonWebToken
     rescue JWT::DecodeError => e
       # raise custom error to be handled by custom handler
       raise ExceptionHandler::InvalidToken, e.message
-    end
   end
 end
