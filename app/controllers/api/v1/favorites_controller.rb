@@ -1,5 +1,6 @@
 class Api::V1::FavoritesController < ApplicationController
   before_action :set_user, only: %i[index create]
+  before_action :check_login, only: %i[create]
   # before_action :set_house, only: [:create]
 
   def index
@@ -8,8 +9,13 @@ class Api::V1::FavoritesController < ApplicationController
   end
 
   def create
-    @favorite = @user.favorites.create!(house_id: params[:house_id])
-    json_response(@favorite, :created)
+    @favorite = @user.favorites.build(house_id: params[:house_id])
+    if @favorite.save
+      json_response(@favorite, :created)
+    else
+      
+      json_response({errors: @favorites.errors}, :unprocessable_entity)
+    end
   end
 
   private

@@ -8,4 +8,11 @@ module Authenticable
     decoded = JsonWebToken.decode(header)
     @current_user = User.find(decoded[:user_id])
   end
+
+  protected
+
+  def check_login
+    head :forbidden unless self.current_user
+  end
+  
 end

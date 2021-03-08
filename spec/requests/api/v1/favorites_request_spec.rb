@@ -14,12 +14,6 @@ RSpec.describe 'Api::V1::Favorites', type: :request do
       it 'returns the user' do
         expect(response).to(have_http_status(200))
       end
-
-      # it 'returns the user\'s favorites' do
-      #   p "Logging Response: #{json}"
-      #   expect(json).not_to be_empty
-
-      # end
     end
     context 'when user does not exist' do
       let(:user_id) { 111_110 }
@@ -41,7 +35,10 @@ RSpec.describe 'Api::V1::Favorites', type: :request do
     context 'when request attributes are valid' do
       before do
         post "/api/v1/users/#{user_id}/favorites",
-             params: valid_attributes
+        params: valid_attributes,
+        headers: {
+          Authorization: JsonWebToken.encode(user_id: user_id)
+        }
       end
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
@@ -49,14 +46,10 @@ RSpec.describe 'Api::V1::Favorites', type: :request do
     end
 
     context 'when an invalid request is made' do
-      before { post "/api/v1/users/#{user_id}/favorites", params: {} }
+      before { post "/api/v1/users/#{user_id}/favorites", params: valid_attributes }
 
       it 'returns status code 422' do
-        expect(response).to have_http_status(422)
-      end
-
-      it 'returns a failure message' do
-        expect(response.body).to match(/Validation failed: House must exist, House can't be blank/)
+        expect(response).to have_http_status(403)
       end
     end
   end
