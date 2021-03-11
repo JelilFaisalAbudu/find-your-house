@@ -1,4 +1,5 @@
 class Api::V1::HousesController < ApplicationController
+  skip_before_action :authorize_request
   def index
     @houses = House.all
     json_response(@houses)
