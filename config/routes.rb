@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       resources :tokens, only: [:create]
 
       post '/auth/login', to: 'authentications#create'
+      post '/signup', to: 'users#create'
     end
   end
 end
