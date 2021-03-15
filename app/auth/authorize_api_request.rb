@@ -4,14 +4,14 @@ class AuthorizeApiRequest
   end
 
   def user
-    { user: authenticate_user }
+    { user: find_user }
   end
 
   private
 
   attr_reader :headers
 
-  def authenticate_user
+  def find_user
     @user ||= User.find(decode_auth_token[:user_id]) if decode_auth_token
   rescue ActiveRecord::RecordNotFound => e
     raise(
