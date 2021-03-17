@@ -3,7 +3,7 @@ class Api::V1::FavoritesController < ApplicationController
   before_action :check_owner, only: %i[destroy]
 
   def index
-    current_user_favorites = current_user.favorites
+    current_user_favorites = current_user.favorite_houses
     json_response(current_user_favorites)
   end
 
