@@ -8,4 +8,5 @@ class House < ApplicationRecord
 
   validates :description,
             presence: true
+  validates :photo_url, presence: true
 end
