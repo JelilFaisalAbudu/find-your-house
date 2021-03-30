@@ -10,7 +10,6 @@ class Api::V1::FavoritesController < ApplicationController
     @favorite = current_user.favorites.find_by(house_id: params[:house_id])
     json_response(@favorite)
   end
-  
 
   def create
     @favorite = current_user.favorites.create!(house_id: params[:house_id])

@@ -3,12 +3,12 @@ class Api::V1::AuthenticationsController < ApplicationController
 
   def create
     auth_token = AuthenticateUser.new(auth_params[:email], auth_params[:password]).user
-    decoded = JsonWebToken.decode(auth_token);
+    decoded = JsonWebToken.decode(auth_token)
     user = User.find_by(id: decoded[:user_id])
     response = {
       id: user[:id],
       name: user[:name],
-      auth_token: auth_token,
+      auth_token: auth_token
     }
     json_response(response, :created)
   end
