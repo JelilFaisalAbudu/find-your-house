@@ -1,46 +1,41 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Favorites', type: :request do
-  let(:users) { create_list(:user, 24) }
-  let(:user) { users.second }
+  let(:user) { create(:user) }
   let(:user_id) { user.id }
-  let(:houses) { create_list(:house, 10) }
-  let(:house_id) { houses.first.id }
-  let(:favorites) { create_list(:favorite, 5, user_id: user_id, house_id: house_id) }
-  let(:favorite_id) { favorites.last.id }
+  let(:house) do
+    House.create(
+      name: Faker::Restaurant.name,
+      category: Faker::Restaurant.type,
+      description: Faker::Restaurant.description,
+      photo_url: Faker::Internet.url
+    )
+  end
+
+  let(:house_id) { house.id }
+  let(:favorite) { user.favorites.create(house_id: house_id) }
+  let(:favorite_id) { favorite.id }
+  let(:headers) { valid_headers }
 
   describe 'GET /api/v1/users/:id/favorites' do
-    before { get "/api/v1/users/#{user_id}/favorites" }
+    before { get "/api/v1/users/#{user_id}/favorites", params: {}, headers: headers }
 
     context 'when the user record exists' do
       it 'returns the user' do
         expect(response).to(have_http_status(200))
       end
     end
-    context 'when user does not exist' do
-      let(:user_id) { 111_110 }
-
-      it 'returns status code 404' do
-        expect(response).to have_http_status(404)
-      end
-
-      it 'returns a not found message' do
-        expect(response.body).to match(/Couldn't find User/)
-      end
-    end
   end
 
-  # Test suite for PUT "api/v1/users/:user_id/favorites"
+  # Test suite for POST "api/v1/users/:user_id/favorites"
   describe 'POST api/v1/users/:user_id/favorites' do
-    let(:valid_attributes) { { house_id: houses.second.id } }
+    let(:valid_attributes) { { house_id: house.id }.to_json }
 
     context 'when request attributes are valid' do
       before do
         post "/api/v1/users/#{user_id}/favorites",
              params: valid_attributes,
-             headers: {
-               Authorization: JsonWebToken.encode(user_id: user_id)
-             }
+             headers: headers
       end
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
@@ -48,10 +43,10 @@ RSpec.describe 'Api::V1::Favorites', type: :request do
     end
 
     context 'when an invalid request is made' do
-      before { post "/api/v1/users/#{user_id}/favorites", params: valid_attributes }
+      before { post "/api/v1/users/#{user_id}/favorites", params: {}, headers: headers }
 
       it 'returns status code 422' do
-        expect(response).to have_http_status(403)
+        expect(response).to have_http_status(422)
       end
     end
   end
@@ -61,9 +56,8 @@ RSpec.describe 'Api::V1::Favorites', type: :request do
     context 'With proper user authorization' do
       before do
         delete "/api/v1/users/#{user_id}/favorites/#{favorite_id}",
-               headers: {
-                 Authorization: JsonWebToken.encode(user_id: user_id)
-               }
+               params: {},
+               headers: headers
       end
       it 'removes favorite item from the list' do
         expect(response).to(have_http_status(204))
@@ -72,13 +66,11 @@ RSpec.describe 'Api::V1::Favorites', type: :request do
 
     context 'With improper user authorization' do
       before do
-        delete "/api/v1/users/#{user_id}/favorites/#{favorite_id}",
-               headers: {
-                 Authorization: JsonWebToken.encode(user_id: users.last.id)
-               }
+        delete "/api/v1/users/#{user_id}/favorites/#{favorite_id}"
+        # headers: headers
       end
       it 'removes favorite item from the list' do
-        expect(response).to(have_http_status(403))
+        expect(response).to(have_http_status(422))
       end
     end
   end

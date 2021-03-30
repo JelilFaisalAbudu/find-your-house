@@ -1,4 +1,5 @@
 class Api::V1::HousesController < ApplicationController
+  skip_before_action :authorize_request
   def index
     @houses = House.all
     json_response(@houses)
@@ -12,6 +13,6 @@ class Api::V1::HousesController < ApplicationController
   private
 
   def house_params
-    params.require(:house).permit(:name, :category, :description)
+    params.require(:house).permit(:name, :category, :description, :photo_url)
   end
 end

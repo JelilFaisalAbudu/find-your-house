@@ -80,7 +80,8 @@ RSpec.configure do |config|
   end
 
   # Include the support directory as shared module for all request specs in the RSpec configuration block
-  config.include RequestSpecHelper, type: :request
+  config.include RequestSpecHelper
+  config.include ControllerSpecHelper
 end
 
 # Configuration for Shoulda matchers

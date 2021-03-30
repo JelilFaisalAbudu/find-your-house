@@ -12,4 +12,5 @@ class User < ApplicationRecord
   validates :password_digest, presence: true
 
   has_many :favorites, dependent: :destroy
+  has_many :favorite_houses, through: :favorites, source: :house
 end

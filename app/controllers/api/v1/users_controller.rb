@@ -1,26 +1,21 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :set_user, only: %i[show]
-
-  def show
-    json_response(@user)
-  end
+  skip_before_action :authorize_request, only: %i[create]
 
   def create
-    @user = User.create!(user_params)
-    if @user.save
-      json_response(@user, :created)
-    else
-      render json: @user.errors, status: :unprocessable_entity
-    end
+    user = User.create!(user_params)
+    auth_token = AuthenticateUser.new(user.email, user.password).user
+    response = {
+      id: user.id,
+      name: user.name,
+      message: Message.account_created,
+      auth_token: auth_token
+    }
+    json_response(response, :created)
   end
 
   private
 
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation)
-  end
-
-  def set_user
-    @user = User.find(params[:id])
+    params.permit(:name, :email, :password, :password_confirmation)
   end
 end
