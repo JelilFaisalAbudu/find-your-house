@@ -211,6 +211,7 @@ DEPENDENCIES
   faker
   jwt
   listen (~> 3.2)
+  mimemagic (~> 0.3.5)
   pg
   puma (~> 4.1)
   rack-cors
