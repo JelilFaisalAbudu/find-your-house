@@ -7,7 +7,8 @@ RSpec.describe 'Api::V1::Favorites', type: :request do
     House.create(
       name: Faker::Restaurant.name,
       category: Faker::Restaurant.type,
-      description: Faker::Restaurant.description
+      description: Faker::Restaurant.description,
+      photo_url: Faker::Internet.url
     )
   end
 

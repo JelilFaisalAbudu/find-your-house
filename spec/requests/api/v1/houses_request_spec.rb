@@ -23,7 +23,8 @@ RSpec.describe 'Api::V1::Houses', type: :request do
       {
         name: Faker::Restaurant.name,
         category: Faker::Restaurant.type,
-        description: Faker::Restaurant.description
+        description: Faker::Restaurant.description,
+        photo_url: Faker::Internet.url
       }
     end
 

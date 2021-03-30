@@ -13,6 +13,6 @@ class Api::V1::HousesController < ApplicationController
   private
 
   def house_params
-    params.require(:house).permit(:name, :category, :description)
+    params.require(:house).permit(:name, :category, :description, :photo_url)
   end
 end
